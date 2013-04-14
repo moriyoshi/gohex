@@ -5,41 +5,41 @@ import (
 	"github.com/jteeuwen/glfw"
 )
 
-type Game struct {
+type Playground struct {
     width int
     height int
     title string
 }
 
-func (game Game) Run(f func()) {
+func (pg Playground) Run(f func()) {
 	for glfw.WindowParam(glfw.Opened) == 1 {
         f()
 		glfw.SwapBuffers()
 	}
 }
 
-func (game Game) KeyPressed(key int) bool {
+func (pg Playground) KeyPressed(key int) bool {
     return glfw.Key(key) == glfw.KeyPress
 }
 
-func launch(game Game) {
+func launch(pg Playground) {
 	glfw.OpenWindowHint(glfw.WindowNoResize, 1)
 
-	if err := glfw.OpenWindow(game.width, game.height, 0, 0, 0, 0, 16, 0, glfw.Windowed); err != nil {
+	if err := glfw.OpenWindow(pg.width, pg.height, 0, 0, 0, 0, 16, 0, glfw.Windowed); err != nil {
 		showError(err)
 		return
 	}
 	defer glfw.CloseWindow()
 
 	glfw.SetSwapInterval(1)
-	glfw.SetWindowTitle(game.title)
+	glfw.SetWindowTitle(pg.title)
 
 	if err := gl.Init(); err != nil {
 		showError(err)
         return
 	}
 
-    if err := gameMain(game); err != nil {
+    if err := gameMain(pg); err != nil {
         showError(err)
         return
     }
@@ -52,5 +52,5 @@ func main() {
 	}
 	defer glfw.Terminate()
 
-    launch(Game{ 640, 480, "HexaGOn" })
+    launch(Playground{ 640, 480, "HexaGOn" })
 }
