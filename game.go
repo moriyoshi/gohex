@@ -63,7 +63,7 @@ type GameState struct {
     hit         bool
     perturbation float64
     reduction   *ReductionAnimationState
-    blast       *BlastAnimationState
+    blast       BlastAnimationState
 }
 
 func (objects ObjectList) Len() int { return len(objects) }
@@ -261,10 +261,6 @@ func (state *GameState) drawBlast() {
     for _, p := range(state.myTriangleCoords(state.game.mySize + state.blast.t)) {
         gl.Vertex3f(gl.Float(p[0]), gl.Float(p[1]), 1)
     }
-    state.blast.t += .005
-    if state.blast.t >= state.game.mySize * 1.5 {
-        state.blast.t = 0.
-    }
 }
 
 
@@ -280,8 +276,12 @@ func (state *GameState) drawScene() {
     state.drawCentralHexagon()
     state.drawObjects()
     state.drawMyTriangle()
-    if state.gameOver {
+    if state.hit {
         state.drawBlast()
+        state.blast.t += .005
+        if state.blast.t >= state.game.mySize * 1.5 {
+            state.blast.t = 0.
+        }
     }
 }
 
@@ -292,12 +292,12 @@ func (state *GameState) hittest(corners [4][2]float64) bool {
         hit := 0
         for _, corner := range(corners) {
             if ((point[0] - prevCorner[0]) * (corner[1] - prevCorner[1]) -
-                 (point[1] - prevCorner[1]) * (corner[0] - prevCorner[0]) >= 0) {
+                 (point[1] - prevCorner[1]) * (corner[0] - prevCorner[0]) < 0) {
                 hit += 1
             }
             prevCorner = corner
         }
-        if (hit == 0 || hit == 4) { return true }
+        if (hit == len(corners)) { return true }
     }
     return false
 }
@@ -380,10 +380,8 @@ func gameMain(pg Playground) error {
 
     pg.Run(func () {
         state.drawScene()
-
         if (!state.gameOver && state.hit) {
             state.gameOver = true
-            state.blast = &BlastAnimationState { t: 0. }
         }
         if (state.gameOver) {
         } else {
