@@ -4,7 +4,7 @@ import (
     "math"
     "math/rand"
     "sort"
-	gl "github.com/chsc/gogl/gl21"
+    gl "github.com/chsc/gogl/gl21"
 )
 
 type ObjectType int;
@@ -50,7 +50,7 @@ type BlastAnimationState struct {
 
 type GameState struct {
     game *Game
-	rotz        float64
+    rotz        float64
     rotationSpeed    float64
     bgcorners   [6]float64
     bgcolor     [3]gl.Float
@@ -77,27 +77,27 @@ func (objects ObjectList) Swap(i, j int) {
 }
 
 func (game *Game) initScene() error {
-	gl.Enable(gl.TEXTURE_2D)
-	gl.Enable(gl.DEPTH_TEST)
+    gl.Enable(gl.TEXTURE_2D)
+    gl.Enable(gl.DEPTH_TEST)
 
-	gl.ClearColor(0., 0., 0., 0.)
-	gl.ClearDepth(1)
-	gl.DepthFunc(gl.LEQUAL)
+    gl.ClearColor(0., 0., 0., 0.)
+    gl.ClearDepth(1)
+    gl.DepthFunc(gl.LEQUAL)
 
-	gl.Viewport(0, 0, gl.Sizei(game.pg.width), gl.Sizei(game.pg.height))
-	gl.MatrixMode(gl.PROJECTION)
-	gl.LoadIdentity()
-	gl.Frustum(-1, 1, -1, 1, 1.0, 10.0)
-	gl.MatrixMode(gl.MODELVIEW)
-	gl.LoadIdentity()
-	return nil
+    gl.Viewport(0, 0, gl.Sizei(game.pg.width), gl.Sizei(game.pg.height))
+    gl.MatrixMode(gl.PROJECTION)
+    gl.LoadIdentity()
+    gl.Frustum(-1, 1, -1, 1, 1.0, 10.0)
+    gl.MatrixMode(gl.MODELVIEW)
+    gl.LoadIdentity()
+    return nil
 }
 
 func (game *Game) destroyScene() {
 }
 
 func (state *GameState) drawBackground() {
-	gl.Begin(gl.TRIANGLES)
+    gl.Begin(gl.TRIANGLES)
     defer gl.End()
 
     for i, c1 := range(state.bgcorners) {
@@ -131,8 +131,8 @@ func (state *GameState) drawCentralHexagon() {
     gl.LineWidth(4.)
     defer gl.LineWidth(1.)
 
-	gl.Begin(gl.LINE_LOOP)
-	defer gl.End()
+    gl.Begin(gl.LINE_LOOP)
+    defer gl.End()
     gl.Color4f(state.bgcolor[0], state.bgcolor[1], state.bgcolor[2], 1.)
 
     r := state.game.hexradius + state.tremble
@@ -145,8 +145,8 @@ func (state *GameState) drawCentralHexagon() {
 }
 
 func (state *GameState) drawObjects() {
-	gl.Begin(gl.QUADS)
-	defer gl.End()
+    gl.Begin(gl.QUADS)
+    defer gl.End()
 
     hexradius := state.game.hexradius
     objects := state.game.objects
@@ -242,8 +242,8 @@ func (state *GameState) myTriangleCoords(r float64) [3][2]float64 {
 }
 
 func (state *GameState) drawMyTriangle() {
-	gl.Begin(gl.TRIANGLES)
-	defer gl.End()
+    gl.Begin(gl.TRIANGLES)
+    defer gl.End()
 
     gl.Color4f(state.bgcolor[0], state.bgcolor[1], state.bgcolor[2], 1.)
     for _, p := range(state.myTriangleCoords(state.game.mySize)) {
@@ -254,8 +254,8 @@ func (state *GameState) drawMyTriangle() {
 func (state *GameState) drawBlast() {
     gl.LineWidth(2.)
     defer gl.LineWidth(1.)
-	gl.Begin(gl.LINE_LOOP)
-	defer gl.End()
+    gl.Begin(gl.LINE_LOOP)
+    defer gl.End()
 
     gl.Color4f(state.bgcolor[0], state.bgcolor[1], state.bgcolor[2], 1.)
     for _, p := range(state.myTriangleCoords(state.game.mySize + state.blast.t)) {
@@ -269,12 +269,12 @@ func (state *GameState) drawBlast() {
 
 
 func (state *GameState) drawScene() {
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-	gl.MatrixMode(gl.MODELVIEW)
-	gl.LoadIdentity()
-	gl.Rotatef(gl.Float(state.rotz), 0, 0, 1)
-	gl.Translatef(0, 0, gl.Float(-3. + rand.Float64() * state.perturbation))
+    gl.MatrixMode(gl.MODELVIEW)
+    gl.LoadIdentity()
+    gl.Rotatef(gl.Float(state.rotz), 0, 0, 1)
+    gl.Translatef(0, 0, gl.Float(-3. + rand.Float64() * state.perturbation))
 
     state.drawBackground()
     state.drawCentralHexagon()
@@ -357,10 +357,10 @@ func gameMain(pg Playground) error {
         game.objects = objects
     }
 
-	if err := game.initScene(); err != nil {
-		return err
-	}
-	defer game.destroyScene()
+    if err := game.initScene(); err != nil {
+        return err
+    }
+    defer game.destroyScene()
 
     state := GameState {
         game        : &game,
